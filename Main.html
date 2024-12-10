@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>2D角色移動範例</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #f0f8ff;
+        }
+        .game-area {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .character {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            font-size: 60px;
+            left: 50%;
+            bottom: 10%;
+            transform: translateX(-50%);
+            transition: left 0.3s ease, bottom 0.3s ease;
+        }
+        .controller {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+        .btn-move {
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 遊戲區域 -->
+<div class="container-fluid game-area" id="gameArea">
+    <div class="character" id="character">🦊</div>
+</div>
+
+<!-- 控制按鈕區域 -->
+<div class="controller">
+    <button class="btn btn-primary btn-move" id="btnLeft">←</button>
+    <button class="btn btn-success btn-move" id="btnJump">⬆</button>
+    <button class="btn btn-primary btn-move" id="btnRight">→</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // 遊戲角色控制
+    const character = document.getElementById('character');
+    const gameArea = document.getElementById('gameArea');
+    let posX = gameArea.clientWidth / 2;
+    let posY = 10; // 距離底部
+
+    // 移動角色
+    function moveCharacter(direction) {
+        const step = 30; // 每次移動像素
+        const maxX = gameArea.clientWidth - character.clientWidth;
+
+        if (direction === 'left' && posX > 0) {
+            posX -= step;
+        } else if (direction === 'right' && posX < maxX) {
+            posX += step;
+        } else if (direction === 'jump') {
+            jump();
+            return; // 跳躍不改變 X 軸
+        }
+        updateCharacterPosition();
+    }
+
+    // 跳躍功能
+    function jump() {
+        const jumpHeight = 150;
+        const originalY = posY;
+
+        character.style.bottom = `${originalY + jumpHeight}px`;
+        setTimeout(() => {
+            character.style.bottom = `${originalY}px`;
+        }, 500);
+    }
+
+    // 更新角色位置
+    function updateCharacterPosition() {
+        character.style.left = `${posX}px`;
+    }
+
+    // 按鈕點擊事件
+    document.getElementById('btnLeft').addEventListener('click', () => moveCharacter('left'));
+    document.getElementById('btnRight').addEventListener('click', () => moveCharacter('right'));
+    document.getElementById('btnJump').addEventListener('click', () => moveCharacter('jump'));
+
+    // 手機滑動事件支援
+    let touchStartX = 0;
+
+    gameArea.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+    });
+
+    gameArea.addEventListener('touchmove', (e) => {
+        const touchX = e.touches[0].clientX;
+        if (touchX < touchStartX - 50) {
+            moveCharacter('left');
+            touchStartX = touchX;
+        } else if (touchX > touchStartX + 50) {
+            moveCharacter('right');
+            touchStartX = touchX;
+        }
+    });
+</script>
+</body>
+</html>
