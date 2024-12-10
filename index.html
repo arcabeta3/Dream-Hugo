@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>角色平台移動</title>
     <style>
-        /* 重置樣式 */
         * {
             margin: 0;
             padding: 0;
@@ -41,12 +40,12 @@
 
         .character {
             position: absolute;
-            width: 40px;
+            width: 60px;
             height: 60px;
-            background: red;
-            bottom: 170px;
-            left: 100px;
-            transition: 0.1s;
+            font-size: 50px;
+            line-height: 60px;
+            text-align: center;
+            transition: all 0.5s ease-in-out;
         }
     </style>
 </head>
@@ -57,7 +56,8 @@
     <div class="platform" id="platform2"></div>
     <div class="platform" id="platform3"></div>
 
-    <div class="character" id="character"></div>
+    <!-- 將角色變成 Emoji 動物 -->
+    <div class="character" id="character">🐱</div>
 </div>
 
 <script src="script.js"></script>
